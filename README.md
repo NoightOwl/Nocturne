@@ -105,4 +105,4 @@ docs/                    methodology, deployment, performance
 
 ## License
 
-MIT. See [`LICENSE`](LICENSE). EFF is credited in [`NOTICE.md`](NOTICE.md); no EFF code, logo, or site copy is included.
+MIT. See [`LICENSE`](LICENSE). Credits for EFF [`NOTICE.md`](NOTICE.md).
