@@ -1,0 +1,17 @@
+{
+  "name": "nocturne",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "NOCTURNE — a local-only, browser-based fingerprint exposure lab.",
+  "license": "MIT",
+  "scripts": {
+    "serve": "node scripts/serve.mjs",
+    "test": "node --test --test-isolation=none tests/all.test.mjs",
+    "check:budget": "node scripts/check-budget.mjs",
+    "check:syntax": "node --check src/main.js && node --check src/router.js && node --check src/views/home.js && node --check src/views/test.js && node --check src/views/results.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
