@@ -15,50 +15,6 @@ NOCTURNE measures the signals a website can request from your browser, estimates
 - **Honest about uniqueness.** A true “1 in N browsers” result needs a live population database. NOCTURNE uses a documented reference model and labels the result as an estimate.
 - **No tracker simulator.** EFF's original test uses its own third-party tracker domains. NOCTURNE cannot reproduce that without infrastructure, so it uses local privacy signals and a low-confidence ad-filter heuristic instead.
 - **Fast.** The landing route is around 24 KB gzipped; the scan engine is lazy-loaded. No web fonts or raster images are loaded by the app, and it makes no third-party runtime requests. The README screenshot is a small WebP.
-- **Glass that resolves to nothing heavy.** Surfaces are smoked glass (`backdrop-filter`) over a faint signal field; when a device, a `prefers-reduced-transparency` setting, or a browser without `backdrop-filter` cannot afford the blur, the same cards render as solid panels. Motion is limited to a one-time scroll reveal and an 8-pixel depth drift, both switched off automatically for reduced-motion, save-data, 2G, and low-memory or low-core devices. The hero canvas paints one static frame and stops; it animates only while it is live and on screen.
-
-## Run locally
-
-Requirements: Node.js 20 or newer. No install step is required.
-
-```bash
-node scripts/serve.mjs
-# open http://127.0.0.1:4173/
-```
-
-Or use any static file server from the repository root. Do not open `index.html` with `file://`; ES modules and Web Crypto need an HTTP(S) origin.
-
-## Test
-
-```bash
-npm test
-npm run check:budget
-```
-
-No dependencies are installed. The tests use Node's built-in test runner. `npm test` runs the suites in one process for compatibility with restricted environments.
-
-Optional browser QA needs a locally started headless Chrome with a debugging port (see [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md)); `npm run shot -- <url> <width> <height> <out.png>` captures an exact-viewport screenshot and prints overflow, network, and console findings. These helpers are development tools, not part of the shipped app.
-
-## Deploy for free on GitHub Pages
-
-1. Create a public GitHub repository, for example `nocturne`.
-2. Push this repository to `main`.
-3. In the repository, open **Settings → Pages**.
-4. Under **Build and deployment**, choose **Deploy from a branch**.
-5. Select `main` and `/ (root)`, then save.
-6. Open `https://<your-username>.github.io/nocturne/`.
-
-No GitHub Actions, build command, custom domain, CNAME, database, or paid service is required. The included `.nojekyll` keeps GitHub Pages from treating the files as a Jekyll site.
-
-`repoUrl` in [`src/data/brand.js`](src/data/brand.js) points at the project repository. Change it when you fork so the header and footer source links point at your copy.
-
-## Configuration
-
-- **Brand name, links, version:** `src/data/brand.js`
-- **Entropy ranges and model version:** `src/data/reference-model.js`
-- **Font detection list:** `src/data/fonts.js`
-- **Signal advice:** `src/data/recommendations.js`
-- **Design tokens and layout:** `assets/styles.css` (the rules and class contract views must emit are in [`docs/STYLE-CONTRACT.md`](docs/STYLE-CONTRACT.md))
 
 ## Privacy model
 
@@ -70,10 +26,6 @@ No GitHub Actions, build command, custom domain, CNAME, database, or paid servic
 - No camera, microphone, location, or notification permission is requested.
 - GitHub Pages can still see the request that served the files, as with any host. That is disclosed in the app.
 
-## Images
-
-The app loads **no raster images**. The logo, favicon, hero art, and decorations are inline SVG/CSS, which is smaller and sharper than a raster asset. Any raster asset added later — for example a README screenshot — must be **WebP** with explicit dimensions and lazy/async loading.
-
 ## Method
 
 The short version:
@@ -83,27 +35,8 @@ The short version:
 3. Sum per-attribute low/high ranges, apply a 0.5 correlation discount, cap at 24 bits, and present a range plus a coverage-based confidence.
 4. Canonicalise stable values and hash them with SHA-256 via the browser's Web Crypto.
 
-See [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) for the full table and limitations, and [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md) for the performance budgets.
+See [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) for the full table and limitations.
 
-## Browser support
-
-Modern evergreen Chrome, Edge, Firefox, and Safari. Probes degrade gracefully when an API is unavailable or blocked. The site needs an HTTPS origin (or localhost) for `crypto.subtle`; GitHub Pages provides HTTPS automatically.
-
-## Repository layout
-
-```text
-index.html               app shell and static header/footer
-assets/styles.css        design system and all layout
-src/main.js              router boot and lazy view loading
-src/ui/                  shared icons, scroll reveal, hero signal field
-src/views/               home, test, results, learn, about, privacy
-src/collectors/          independent browser probes
-src/lib/                 hashing, canonicalisation, entropy, formatting, device tier
-src/data/                brand, model, fonts, recommendations
-tests/                   Node test suites
-scripts/                 local server, budget check, screenshot helper
-docs/                    style contract, methodology, deployment, performance
-```
 
 ## License
 
